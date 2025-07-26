@@ -1,0 +1,10 @@
+# the fields below will be used by types to compile the final pdf document
+
+title = "TU Delft, Integrity, and Genocide"  # This will show up as the big header for the document
+authors = []  # This will show up only in the metadata, so it could be left empty 
+
+
+[date]  # this is parsed as a datetime and shows up in doc metadata
+year = "2025"  
+month = "6"  
+day = "1"  

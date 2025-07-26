@@ -1,0 +1,44 @@
+name: Compile Typst Document to PDF
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  build_typst_document:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+          submodules: 'recursive' # or 'true' for non-nested submodules
+
+    - name: Set up specific Typst version
+      uses: typst-community/setup-typst@v4
+      with:
+        typst-version: '0.13.0' 
+
+    - name: Set up fontist
+      uses: fontist/setup-fontist@v2
+
+    - name: get font
+      run: |
+       fontist install "Atkinson Hyperlegible"
+       fontist install "Cal Sans"
+
+    - name: Compile Typst document
+      run: |
+        FULL_SHA="${{ github.sha }}"
+        typst compile template/main.typ open-letter.pdf --input commit=${FULL_SHA:0:7}  --font-path ~/.fontist/fonts 
+
+    - name: Upload compiled PDF
+      uses: actions/upload-artifact@v4
+      with:
+        name: Compiled-PDF
+        path: open-letter.pdf # Path to the generated PDF file
